@@ -16,24 +16,25 @@ import jakarta.validation.Valid;
 
 @RestController
 public class UserResource {
+
 	private UserDaoService service;
-	
+
 	public UserResource(UserDaoService service) {
-		super();
 		this.service = service;
 	}
-	
+
 	@GetMapping("/users")
-	public List<User> etrieveAllUser() {
-		return service.findAll();	
+	public List<User> retrieveAllUsers() {
+		return service.findAll();
 	}
-	
+
 	@GetMapping("/users/{id}")
 	public User retrieveUser(@PathVariable int id) {
-		User user = service.findById(id);
-		if(user == null) {
-			throw new UserNotFoundException("id: " + id);
-		}
+		User user = service.findOne(id);
+		
+		if(user==null)
+			throw new UserNotFoundException("id:"+id);
+		
 		return user;
 	}
 	
@@ -41,17 +42,18 @@ public class UserResource {
 	public void deleteUser(@PathVariable int id) {
 		service.deleteById(id);
 	}
-	
+
 	@PostMapping("/users")
 	public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
+		
 		User savedUser = service.save(user);
-				
-		//Url of the created user
-		URI location = ServletUriComponentsBuilder.fromCurrentRequestUri()
-				.path("/{id}")
-				.buildAndExpand(savedUser.getId())
-				.toUri();
-		return ResponseEntity.created(location ).build();
+
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+						.path("/{id}")
+						.buildAndExpand(savedUser.getId())
+						.toUri();   
+		
+		return ResponseEntity.created(location).build();
 	}
 	
 	
