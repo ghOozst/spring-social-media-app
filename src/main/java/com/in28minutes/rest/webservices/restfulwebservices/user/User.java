@@ -2,17 +2,29 @@ package com.in28minutes.rest.webservices.restfulwebservices.user;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 
 public class User {
 	
 	private Integer id;
+	/*Size and Past are used in validations*/
 	
+	/*JsonPropert is used to change the name in the json response
+	 * At then it's gonna look something like this:
+	 * {
+		"id": 1,
+		"user_name": "Adam",
+		"birth_day": "1994-01-07",
+	   }*/
 	@Size(min=2, message = "Name should have atleast 2 characters")
+	@JsonProperty("user_name")
 	private String name;
 	
 	@Past(message = "Birth Date should be in the past")
+	@JsonProperty("birth_day")
 	private LocalDate birthDate;
 	
 	public User(Integer id, String name, LocalDate birthDate) {
