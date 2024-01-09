@@ -104,7 +104,7 @@ public class UserJpaResource {
 	@PostMapping("/jpa/users/{id}/posts")
 	public ResponseEntity<Post> createUserPosts(@PathVariable int id, @Valid @RequestBody Post post) {
 		Optional<User> user = userRepository.findById(id);
-				
+			
 		if(user==null)
 			throw new UserNotFoundException("id:"+id);
 		post.setUser(user.get());
